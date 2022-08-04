@@ -1,0 +1,91 @@
+experiment_name: 'ppi' #'name that will be added to the runs folder output'
+device: cuda # What device to train on: [cuda or cpu]
+seed: 1 # seed for reproducibility
+data_seed: 1
+
+trainer: # leave empty for None
+num_epochs: 1
+minimum_epochs: 0 # minimum number of epochs to run
+batch_size: 128
+log_iterations: 1 # log every log_iterations iterations (-1 for only logging after each epoch)
+expensive_log_iterations: 100 # frequency with which to do expensive logging operations
+patience: 150 #stop training after no improvement in this many epochs
+val_per_batch: True # run evaluation every batch and then average over the eval results. When running the molhiv benchmark for example, this needs to be Fale because we need to evaluate on all val data at once since the metric is rocauc
+eval_per_epochs: 0 # frequency with which to do run the function run_eval_per_epoch that can do some expensive calculations on the val set or sth like that. If this is zero, then the function will never be called
+num_train: # n samples of the model samples to use for train
+num_val: # n samples of the model samples to use for validation
+collate_function: padded_permuted_collate # the collate function to use for DataLoader
+train_predictions_name: # leave empty for None
+val_predictions_name: # leave empty for None
+train_sampler: 'BalancedBatchSampler' # [HardSampler, BalancedBatchSampler] any of pytorchs samplers or a custom sampler')
+
+balanced_loss: True
+loss_func: ppiCrossEntropy # Class name of torch.nn like [MSELoss, L1Loss]
+loss_params: # parameters with keywords of the chosen loss function
+  ot_loss_weight: 1
+  key_point_alignmen_loss_weight: 0 # this does only work if ot_loss_weight is not 0
+  centroid_loss_weight: 0
+  intersection_loss_weight: 1
+  intersection_sigma: 8 # 8 was determined by gridsearch over data
+  intersection_surface_ct: 1 # grid search says 2.5
+  translated_lig_kpt_ot_loss: False
+  kabsch_rmsd_weight: 1
+
+embeddings: '/home/nhowlada/PPInteraction/data_files/embeddings_file.h5'
+remapped_sequences: '/home/nhowlada/PPInteraction/data_files/remapped_sequences_file.fasta'
+train_annotations: '/home/nhowlada/PPInteraction/data_files/annotations_train.txt'
+val_annotations: '/home/nhowlada/PPInteraction/data_files/annotations_val.txt'
+test_annotations: '/home/nhowlada/PPInteraction/data_files/annotations_test.txt'
+
+num_workers: 0 # num workers argument of dataloaders
+pin_memory: True # pin memory argument for pytorch dataloaders
+dataset: PPIDataset # which dataset to use
+dataset_params: #parameters with keywords of the dataset
+  dataset_size: # mostly for debugging dataset creation. leave empty to use the whole dataset
+  n_jobs: 20 # leave empty to use num_cpu - 1
+
+metrics: # tensorboard metrics [mae, mae_denormalized, qm9_properties ...]
+  - bal_accuracy
+  - accuracy
+  - mcc
+  - f1_score
+  - precision
+  - recall
+main_metric: loss # for early stopping etc.
+main_metric_goal: 'min' # controls early stopping. [max, min]
+
+optimizer: Adam # Class name of torch.optim like [Adam, SGD, AdamW]
+optimizer_params: # parameters with keywords of the chosen optimizer like lr
+  lr: 1.0e-4
+  weight_decay: 1.0e-4 # 1.0e-5 in good run
+clip_grad: 100 # clip gradients if magnitude is greater
+
+scheduler_step_per_batch: False # step every batch if true step every epoch otherwise
+lr_scheduler:  ReduceLROnPlateau # Class name of torch.optim.lr_scheduler like [CosineAnnealingLR, ExponentialLR, LambdaLR]
+lr_scheduler_params: # parameters with keywords of the chosen lr_scheduler
+  factor: 0.6
+  patience: 10
+  min_lr: 8.0e-6
+  mode: 'max'
+  verbose: True
+
+
+# Model parameters
+model_type: 'LinearAttention' # [LinearAttention, SelfAttention] Classname of one of the models in the models dir
+model_parameters: # dictionary of model parameters
+  n_lays: 8  # 5 in  good run
+  debug: False
+  shared_layers: False # False in good run
+  noise_decay_rate: 0.5
+  noise_initial: 1
+  iegmn_lay_hid_dim: 64
+  num_att_heads: 30 # 20 ic  good run
+  dropout: 0.1
+  layer_norm: 'BN' # ['0', 'BN', 'LN'] # BN in good run
+  layer_norm_coords: '0' # ['0', 'LN'] # 0 in good run
+  final_h_layer_norm: '0' # ['0', 'GN', 'BN', 'LN'] # 0 in good run
+  
+
+eval_on_test: True # runs evaluation on test set if true
+# continue training from checkpoint:
+#checkpoint: runs/path_to_the_experiment/last_checkpoint.pt
