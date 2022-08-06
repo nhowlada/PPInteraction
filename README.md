@@ -85,14 +85,14 @@ docker pull nhowlada/ppinteraction:latest
 ```
 
 > ### (Alternatively)
-### [Clone the repo form the github](https://github.com/nhowlada/PPInteraction)
-```
-git clone git@github.com:nhowlada/PPInteraction.git
-```
-### [Build with docker](https://hub.docker.com/repository/docker/nhowlada/ppinteraction)
-```
-docker build -f Dockerfile -t nhowlada/ppinteraction .
-```
+> ### [Clone the repo form the github](https://github.com/nhowlada/PPInteraction)
+> ```
+> git clone git@github.com:nhowlada/PPInteraction.git
+> ```
+> ### [Build with docker](https://hub.docker.com/repository/docker/nhowlada/ppinteraction)
+> ```
+> docker build -f Dockerfile -t nhowlada/ppinteraction .
+> ```
 
 
 ### Run docker container
