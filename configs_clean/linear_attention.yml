@@ -31,11 +31,11 @@ loss_params: # parameters with keywords of the chosen loss function
   translated_lig_kpt_ot_loss: False
   kabsch_rmsd_weight: 1
 
-embeddings: '/home/nhowlada/PPInteraction/data_files/embeddings_file.h5'
-remapped_sequences: '/home/nhowlada/PPInteraction/data_files/remapped_sequences_file.fasta'
-train_annotations: '/home/nhowlada/PPInteraction/data_files/annotations_train.txt'
-val_annotations: '/home/nhowlada/PPInteraction/data_files/annotations_val.txt'
-test_annotations: '/home/nhowlada/PPInteraction/data_files/annotations_test.txt'
+embeddings: '/app/data_files/embeddings_file.h5'
+remapped_sequences: '/app/data_files/remapped_sequences_file.fasta'
+train_annotations: '/app/data_files/annotations_train.txt'
+val_annotations: '/app/data_files/annotations_val.txt'
+test_annotations: '/app/data_files/annotations_test.txt'
 
 num_workers: 0 # num workers argument of dataloaders
 pin_memory: True # pin memory argument for pytorch dataloaders
