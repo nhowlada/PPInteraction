@@ -1,6 +1,6 @@
 # Protein Protein Interaction Prediction
 
-### [Video](https://www.youtube.com) | [Paper](https://www.youtube.com)
+### [Video]() | [Paper]()
 
 Repository for the paper [Protein Protein interaction prediction]().
 
